@@ -1,0 +1,526 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+
+.App {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  margin: 0;
+  text-align: center;
+  background-color: #fff;
+}
+
+p {
+  font-size: 2vw;
+  font-weight: bold;
+  color: #28B463;
+  font-family: Times New Roman;
+}
+
+.r {
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+  font-family: Times New Roman;
+}
+
+h1 {
+  color: #635f9a;
+  font-family: Times New Roman;
+}
+h2 {
+  margin-top: 10px;
+  color: #000;
+  font-size: 2vw;
+  font-family: Times New Roman;
+  font-weight: bold;
+}
+h3 {
+  font-size: 10px;
+  color: #fff;
+  font-family: Times New Roman;
+}
+h4 {
+  font-size: 15px;
+  color: #fff;
+  font-family: Times New Roman;
+}
+h6 {
+  font-size: 30px;
+  color: #E74C3C;
+  font-family: Times New Roman;
+}
+h5 {
+  font-size: 10px;
+  margin-left: 20px;
+  font-family: Times New Roman;
+  
+}
+/* Add padding to containers */
+.container {
+  width: 100vw;
+  padding: 5em;
+  height: 100vh;
+  background-color: #000;
+  margin: 0;
+  padding: 0;
+}
+.containerr {
+  width: 60%;
+  padding: 5em;
+  border-radius: 20px;
+  background-color: #F5CBA7;
+  margin: auto;
+}
+.helo {
+  display: flex;
+  width: 100vw;
+  background-color: #000;
+}
+.feherablak {
+  padding: 16px;
+  height: 18.5vh;
+  border-radius: 0px 10px 0px 0px;
+  border: medium solid black;
+  width: 30em;
+  margin-right: 10px;
+  margin-top: 10px;
+  background-color: #fff;
+}
+.feherablak2 {
+  padding: 16px;
+  height: 18.5vh;
+  border-radius: 0px 0px 0px 0px;
+  border: medium solid black;
+  width: 64vw;
+  line-height: 100px;
+  margin-top: 10px;
+  background-color: #fff;
+}
+.feherablak3 {
+  padding: 16px;
+  height: 18.5vh;
+  border-radius: 10px 0px 0px 0px;
+  border: medium solid black;
+  width: 18.5vw;
+  margin-left: 10px;
+  margin-top: 10px;
+  background-color: #fff;
+}
+
+.feherablak4 {
+  display: flex;
+  height: auto;
+  width: 100vw;
+  background-color: #000;
+}
+
+.feherablak5 {
+  height: 72vh;
+  border-radius: 0px 0px 0px 10px;
+  border: medium solid black;
+  width: 18.5vw;
+  margin-left: 10px;
+  background-color: #fff;
+}
+
+.feherablak6 {
+  height: 72vh;
+  border-radius: 0px 0px 10px 0px;
+  border: medium solid black;
+  width: 80vw;
+  margin-right: 10px;
+  background-color: #fff;
+}
+
+ul {
+  padding: 10px;
+  list-style-type: none;
+}
+
+ul.termlist {
+  padding: 10px;
+  width: 120vh;
+  height: 60vh;
+  list-style-type: none;
+  overflow: auto;
+}
+
+ul.cucclist {
+  padding: 10px;
+  width: 74vw;
+  height: 45vh;
+  margin: auto;
+  list-style-type: none;
+  overflow: auto;
+}
+
+.img {
+  width: 20%;
+  height: auto;
+}
+
+.fizetendo {
+  text-align: left;
+  border-width: 0px 0px 5px 0px;
+  border-color: #000;
+  border-style: solid;
+  height: 40px;
+  line-height: 40px;
+  font-weight: bold;
+  font-size: 20px;
+  padding-left: 25px;
+  font-family: Times New Roman;
+}
+
+ul.nevek {
+  overflow: auto;
+  height: 30vh;
+}
+
+
+
+
+
+li {
+  background-color: #34568B;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  line-height: 40px;
+  height: 40px;
+  color: #fff;
+  font-weight: bold;
+}
+
+li.nevekli {
+  cursor: pointer;
+}
+li.nevekli:hover {
+  background-color: #2E86C1;
+}
+
+ul.termlist li {
+  background-color: #123456;
+  border-radius: 10px;
+  display: inline-block;
+  margin: 20px;
+  width: 150px;
+  line-height: 40px;
+  height: 150px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: bold;
+}
+
+ul.cucclist li {
+  background-color: #fff;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  width: 70vw;
+  line-height: 2em;
+  height: 2em;
+  color: #fff;
+  font-weight: bold;
+}
+
+.lihozz {
+  background-color: #28B463;
+  border-radius: 10px;
+  width: 150px;
+  line-height: 40px;
+  margin-top: 110px;
+  text-align: center;
+  height: 40px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+
+}
+
+.cucclihozz {
+  background-color: #AEB6BF;
+  border-radius: 10px;
+  width: 30vw;
+  line-height: 2em;
+  text-align: center;
+  margin-left: 150px;
+  height: 2em;
+  font-size: 15px;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+
+}
+
+
+.szamlalo {
+  background-color: #AEB6BF;
+  border-radius: 10px;
+  width: 200px;
+  line-height: 2em;
+  text-align: center;
+  height: 2em;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+
+}
+
+.szamlalom {
+  background-color: #E59866;
+  border-radius: 10px;
+  width: 4em;
+  line-height: 2em;
+  margin-left: 25px;
+  text-align: center;
+  height: 2em;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+
+}
+
+.szamlalop {
+  background-color: #28B463;
+  border-radius: 10px;
+  width: 4em;
+  line-height: 2em;
+  text-align: center;
+  margin-left: 25px;
+  height: 2em;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+
+}
+
+.szamlalok {
+  background-color: #E74C3C;
+  border-radius: 10px;
+  width: 4em;
+  line-height: 2em;
+  text-align: center;
+  font-weight: bold;
+  margin-left: 200px;
+  height: 2em;
+  font-size: 1em;
+  padding-left: 10px;
+  padding-right: 10px;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+
+}
+
+.tetelelista {
+  background-color: #AEB6BF;
+  border-radius: 10px;
+  width: 70vw;
+  line-height: 2em;
+  padding: 10px;
+  margin: 10px;
+  text-align: center;
+  display: flex;
+  height: 2em;
+  color: #fff;
+  font-weight: bold;
+
+}
+
+
+
+nevlista {
+  width: 20%;
+  background-color: #fff;
+}
+button {
+  background-color: #FF6F61;
+  color: #fff;
+  border-radius: 10px;
+  font-weight: bold;
+  width: 10vw;
+  font-size: 1vw;
+  cursor: pointer;
+
+}
+.buttonr {
+  background-color: #FF6F61;
+  color: #fff;
+  border-radius: 10px;
+  font-weight: bold;
+  width: 8rem;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.button {
+  background-color: #34568B;
+  color: #fff;
+  border-radius: 10px;
+  font-weight: bold;
+  width: 8rem;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.buttonn {
+  background-color: #123456;
+  color: #fff;
+  border-radius: 10px;
+  font-weight: bold;
+  width: 200px;
+  cursor: pointer;
+
+}
+
+.szuro{
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  height: 70vh;
+  overflow: auto;
+}
+.modd {
+  display: flex;
+  flex-direction: row;
+}
+
+.buttonhozz {
+  background-color: #28B463;
+  color: #fff;
+  border-radius: 10px;
+  font-weight: bold;
+  width: 40px;
+  cursor: pointer;
+}
+
+.modalhozz {
+  background-color: #28B463;
+  margin: 10px;
+}
+
+.buttonprof {
+  background-color:  #34568B;
+  border-radius: 10px;
+  font-size: 3vw;
+  font-weight: bold;
+  color: #fff;
+  width: 8vw;
+  cursor: pointer;
+
+}
+
+.buttonfiz {
+  background-color: #82b74b;
+  border-radius: 10px;
+  font-size: 3vw;
+  font-weight: bold;
+  color: #fff;
+  width: 15vw;
+  cursor: pointer;
+
+}
+
+.profil {
+  width: 100%;
+  display: flex;
+  height: 100px;
+  border-bottom: thick solid black;
+}
+
+
+
+.nev {
+  width: 40%;
+  height: 100px;
+  line-height: 80px;
+  text-align: left;
+  display: flex;
+  padding-left: 60px;
+  border-right: thick solid black;
+  font-size: 30px;
+}
+.plus {
+  width: 30%;
+  height: 100px;
+  border-radius: 10px;
+  line-height: 80px;
+  font-size: 60px;
+  font-weight: bold;
+  color: #28B463;
+}
+.fizetes {
+  width: 30%;
+  height: 100px;
+  border-radius: 10px;
+  line-height: 100px;
+  font-size: 30px;
+  font-weight: bold;
+  color: #28B463;
+}
+
+input {
+  border-radius: 10px;
+  margin: 20;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+}
+
+.ipuntplus {
+  width: 40px;
+  height: 40px;
+  margin-left: 10px;
+  line-height: 4.3vh;
+  font-size: 2vw;
+  border: none;
+  color: #fff;
+  border-radius: 10px;
+  background-color: green;
+  cursor: pointer;
+
+}
+
+.ipuntplus:hover {
+  width: 6vh;
+  height: 5vh;
+  margin-left: 10px;
+  line-height: 4.3vh;
+  font-size: 30px;
+  color: #fff;
+  border-radius: 10px;
+  background-color: #28B463;
+  cursor: pointer;
+
+}
+
+
+
+
+
+
+
+@media only screen and (min-width: 768px) {
+  .container {
+    width: 100vw;
+  }
+}
+
+@media only screen and (max-width: 1040px) {
+  p {
+    font-size: 25px;
+  }
+  .szamlalok {
+    width: 90px;
+  }
+  .szamlalom {
+    width: 90px;
+  }
+  .szamlalop {
+    width: 90px;
+  }
+}

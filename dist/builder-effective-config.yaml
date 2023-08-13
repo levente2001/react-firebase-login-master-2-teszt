@@ -1,0 +1,13 @@
+directories:
+  output: dist
+  buildResources: assets
+files:
+  - filter:
+      - build/**/*
+extraMetadata:
+  main: build/electron.js
+appId: com.example.yourapp
+win:
+  target: nsis
+extends: react-cra
+electronVersion: 25.1.1

@@ -1,0 +1,42 @@
+/* Full-width inputs */
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Set a style for all buttons */
+button {
+  background-color: #635f9a;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.buttonr {
+  background-color: #FF6F61;
+  color: #fff;
+  border-radius: 10px;
+  font-weight: bold;
+  width: 8rem;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Add a hover effect for buttons */
+button:hover {
+  opacity: 0.8;
+}
+
+.error {
+  color: red;
+  font-size: 0.75em;
+}
