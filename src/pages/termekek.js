@@ -17,6 +17,7 @@ class Raktarkeszlet extends React.Component {
           searchTerm: '',
           openModal: false,
           selectedItem: '',
+          selectedCategory: '',
         };
     }
 
@@ -27,6 +28,14 @@ onClickButton = e =>{
 
  onCloseModal = ()=>{
      this.setState({openModal : false})
+   }
+onClickButtonn = e =>{
+    e.preventDefault()
+    this.setState({openModall : true})
+}
+
+ onCloseModall = ()=>{
+     this.setState({openModall : false})
    }
 
 componentDidMount() {
@@ -64,6 +73,37 @@ handleUpdateQuantity = () => {
     }
 }
 
+handleAddItem = () => {
+    const itemsRef = Firebase.database().ref('products');
+    const newItem = {
+        nev: this.nevInput.value,
+        ar: this.priceInput.value,
+        quantity: this.quantityInput.value,
+        cat: this.state.selectedCategory,
+    };
+    itemsRef.push(newItem);
+    this.onCloseModall();
+}
+
+handleDeleteItem = (itemId) => {
+    const itemsRef = Firebase.database().ref('products').child(itemId);
+    itemsRef.remove();
+    this.setState({ openModal: false, selectedItem: null });
+}
+
+
+getQuantityStyle = (quantity) => {
+    if (quantity < 10) {
+      return {backgroundColor: 'red'};
+    } else if (quantity >= 10 && quantity < 20) {
+      return {backgroundColor: 'orange'};
+    } else if (quantity >= 20 && quantity < 30) {
+      return {backgroundColor: 'yellow'};
+    } else {
+        return {backgroundColor: 'green'};
+    }
+  }
+  
   
 
 handleSearchChange = (event) => {
@@ -80,6 +120,7 @@ handleSearchChange = (event) => {
 
         <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", width: "60vw"}}>
             <Link style={{textDecoration: "none", color: "grey", fontWeight: "bold"}} to="/admin">Vissza</Link>
+            <button className="buttonr" onClick={this.onClickButtonn}>+</button>
             <input
                 type="text"
                 placeholder="Keresés..."
@@ -98,7 +139,7 @@ handleSearchChange = (event) => {
           {filteredList.map((item) => {
            return (
               <li  key={item.id}>
-                <div className="tetelelistaterme">
+                <div className="tetelelistaterme" style={this.getQuantityStyle(item.quantity)}>
                   <div className="szamlalomasik">{item.nev}</div>
                   <div className="cucclihozzmasik">{item.ar} Ft</div>
                   <div className="cucclihozzmasik">{item.quantity} db</div>
@@ -147,7 +188,70 @@ handleSearchChange = (event) => {
                     </div>
 
                     
-                    <button className="margin" onClick={this.handleUpdateQuantity}>Update</button>
+                    <button className="margin" onClick={this.handleUpdateQuantity}>Frissítés</button>
+                    <button className="margin" style={{ backgroundColor: 'red' }} onClick={() => this.handleDeleteItem(this.state.selectedItem.id)}>Delete</button>
+                </div>
+            </div>
+        </Modal>
+
+        <Modal open={this.state.openModall} onClose={this.onCloseModall}>
+            <div style={{width: "74vw", height: "70vh"}}>
+                <div className="modal-content">
+                    <h2>A következő módosítása: {this.state.selectedItem?.nev}</h2>
+
+                    <div style={{display: "flex", flexDirection: "column"}}>
+                        <label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}}  htmlFor="quantityInput">Mennyiség:</label>
+                        <div style={{width: "100%"}}>
+                            <input 
+                                className="input" 
+                                type="number" 
+                                defaultValue={this.state.selectedItem?.quantity} 
+                                ref={(input) => this.quantityInput = input} 
+                            />
+                        </div>
+                        
+                        <label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}} htmlFor="priceInput">Ár:</label>
+                        <div style={{width: "100%"}}>
+                            <input
+                                className="input"
+                                type="number" 
+                                placeholder="Ár"
+                                defaultValue={this.state.selectedItem?.ar}   
+                                ref={(input) => this.priceInput = input} 
+                            />
+                        </div>
+                        <label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}} htmlFor="priceInput">Név:</label>
+                        <div style={{width: "100%"}}>
+                            <input
+                                className="input width60p"
+                                placeholder="Név"
+                                defaultValue={this.state.selectedItem?.nev}   
+                                ref={(input) => this.nevInput = input} 
+                            />
+                        </div>
+                        <label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}} htmlFor="categoryInput">Kategória:</label>
+                        <div style={{width: "100%"}}>
+                            <select 
+                                id="categoryInput"
+                                className="input width60p"
+                                value={this.state.selectedCategory} 
+                                onChange={(e) => this.setState({ selectedCategory: e.target.value })}
+                            >
+                                <option value="meleg">Meleg</option>
+                                <option value="üdítők">Üdítők</option>
+                                <option value="borok">Borok</option>
+                                <option value="koktel">Koktel</option>
+                                <option value="rovid2">Rovid2</option>
+                                <option value="rovid4">Rovid4</option>
+                                <option value="sör">Sör</option>
+                                <option value="snack">Snack</option>
+                                <option value="jeges italok">Jeges Italok</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    
+                    <button className="margin" onClick={this.handleAddItem}>Hozzáadás</button>
                 </div>
             </div>
         </Modal>
