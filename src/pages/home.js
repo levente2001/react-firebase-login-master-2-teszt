@@ -45,7 +45,7 @@ class Home extends React.Component {
       zero: 0,
       bevtl: [],
       user: '',
-      szamlalo: '',
+      szamlalo: null,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -148,31 +148,215 @@ class Home extends React.Component {
   handleSubmitTetelTorles(e) {
     e.preventDefault();
     initialize();
+    
     const itemsRef = Firebase.database().ref('tetelek/' + this.state.idt);
-    itemsRef.remove()
-    this.setState({
-      openModalll: false
-    })
+    const productsRef = Firebase.database().ref('products');
+  
+    // Fetch the current state of the item to get its tetel and szamlalo
+    itemsRef.once('value', itemSnapshot => {
+      const itemData = itemSnapshot.val();
+  
+      if (itemData) {
+        const tetelName = itemData.tetel;
+        const szamlaloValue = itemData.szamlalo || 0;
+  
+        // Now, fetch the product by its name
+        productsRef.orderByChild('nev').equalTo(tetelName).once('value', productSnapshot => {
+          const products = productSnapshot.val();
+  
+          if (products) {
+            const productId = Object.keys(products)[0];
+            const productData = products[productId];
+  
+            if (typeof productData.quantity !== 'undefined') {
+              // Calculate the new quantity (increment by the item's szamlalo value)
+              const newQuantity = productData.quantity + szamlaloValue;
+  
+              // Update the quantity in the database for the product
+              productsRef.child(productId).update({ quantity: newQuantity });
+            }
+          }
+        });
+  
+        // Finally, remove the item from the database
+        itemsRef.remove();
+  
+        // Update component's state to close the modal
+        this.setState({
+          openModalll: false
+        });
+      }
+    });
+  }
+  
+
+  
+  decrementSzamlalo = (itemId) => {
+    const itemRef = Firebase.database().ref('tetelek/' + itemId);
+    const productsRef = Firebase.database().ref('products');
+  
+    // Fetch the current state of the item
+    itemRef.once('value', itemSnapshot => {
+      const itemData = itemSnapshot.val();
+  
+      if (itemData) {
+        // If szamlalo exists in item, increment it, otherwise set it to 1
+        const newSzamlalo = Math.max(0, (itemData.szamlalo || 0) - 1);
+        
+        // Update the szamlalo in the database for the item
+        itemRef.update({ szamlalo: newSzamlalo });
+  
+        // Also update the szamlalo in your component's state (if needed)
+        this.setState({ szamlalo: newSzamlalo });
+  
+        // Now, fetch the product by its name (assumed to be stored in itemData.tetel)
+        productsRef.orderByChild('nev').equalTo(itemData.tetel).once('value', productSnapshot => {
+          const products = productSnapshot.val();
+  
+          // Assuming product names are unique, there should be only one matching product
+          if (products) {
+            const productId = Object.keys(products)[0];
+            const productData = products[productId];
+  
+            if (typeof productData.quantity !== 'undefined') {
+              // Calculate the new quantity (decrement by the incremented szamlalo value)
+              const newQuantity = parseInt(productData.quantity, 10) + 1;
+  
+              // Update the quantity in the database for the product
+              productsRef.child(productId).update({ quantity: newQuantity });
+            }
+          }
+        });
+      }
+    });
   }
 
-  handleSubmitTerm(e) {
-    e.preventDefault();
-    initialize();
-    const itemsReff = Firebase.database().ref('tetelek');
-    const itemm = {
-      vendeg: this.state.cimnev,
-      tetel: this.state.tetel,
-      ar: this.state.ar,
-      szamlalo: this.state.szamlalo,
+
+incrementSzamlalo = (itemId) => {
+  const itemRef = Firebase.database().ref('tetelek/' + itemId);
+  const productsRef = Firebase.database().ref('products');
+
+  // Fetch the current state of the item
+  itemRef.once('value', itemSnapshot => {
+    const itemData = itemSnapshot.val();
+
+    if (itemData) {
+      // If szamlalo exists in item, increment it, otherwise set it to 1
+      const newSzamlalo = (itemData.szamlalo || 0) + 1;
+      
+      // Update the szamlalo in the database for the item
+      itemRef.update({ szamlalo: newSzamlalo });
+
+      // Also update the szamlalo in your component's state (if needed)
+      this.setState({ szamlalo: newSzamlalo });
+
+      // Now, fetch the product by its name (assumed to be stored in itemData.tetel)
+      productsRef.orderByChild('nev').equalTo(itemData.tetel).once('value', productSnapshot => {
+        const products = productSnapshot.val();
+
+        // Assuming product names are unique, there should be only one matching product
+        if (products) {
+          const productId = Object.keys(products)[0];
+          const productData = products[productId];
+
+          if (typeof productData.quantity !== 'undefined') {
+            // Calculate the new quantity (decrement by the incremented szamlalo value)
+            const newQuantity = productData.quantity - 1;
+
+            // Update the quantity in the database for the product
+            productsRef.child(productId).update({ quantity: newQuantity });
+          }
+        }
+      });
     }
-    itemsReff.push(itemm);
+  });
+}
+
+
+
+handleSubmitTerm(e) {
+  e.preventDefault();
+  initialize();
+  const itemsRef = Firebase.database().ref('tetelek');
+  const productsRef = Firebase.database().ref('products');
+  const { cimnev, tetel, ar, szamlalo } = this.state;
+
+  // Filter by tetel
+  itemsRef.orderByChild('tetel').equalTo(tetel).once('value', snapshot => {
+    const matchingItems = snapshot.val();
+    let existingItem = null;
+    let itemId = null;
+
+    // Check if vendeg also matches among the filtered items
+    if (matchingItems) {
+      for (let key in matchingItems) {
+        if (matchingItems[key].vendeg === cimnev) {
+          existingItem = matchingItems[key];
+          itemId = key;
+          break;
+        }
+      }
+    }
+
+    if (existingItem) {
+      // If item already exists with matching tetel and vendeg, get its key and update szamlalo
+
+      // Get the current szamlalo from the existing item
+      const currentSzamlalo = existingItem.szamlalo || 0;
+
+      // Increment the szamlalo by 1
+      const incrementedSzamlalo = currentSzamlalo + 1;
+
+      // Update the szamlalo in the database
+      itemsRef.child(itemId).update({ szamlalo: incrementedSzamlalo }, (error) => {
+        if (error) {
+          console.error("Failed to update szamlalo:", error);
+        } else {
+          console.log("Szamlalo successfully updated!");
+        }
+      });
+
+    } else {
+      // If item does not exist, add it as a new item
+      const item = {
+        vendeg: cimnev,
+        tetel: tetel,
+        ar: ar,
+        szamlalo: szamlalo,
+      };
+      itemsRef.push(item);
+    }
+
+    // Decrement product quantity
+    productsRef.orderByChild('nev').equalTo(tetel).once('value', productSnapshot => {
+      const products = productSnapshot.val();
+
+      if (products) {
+        const productId = Object.keys(products)[0];
+        const productData = products[productId];
+
+        if (typeof productData.quantity !== 'undefined') {
+          // Calculate the new quantity (decrement by 1)
+          const newQuantity = productData.quantity - 1;
+
+          // Update the quantity in the database for the product
+          productsRef.child(productId).update({ quantity: newQuantity });
+        }
+      }
+    });
+
+    // Reset component state
     this.setState({
       vendeg: '',
       tetel: '',
       ar: '',
       szamlalo: ''
     });
-  }
+  });
+}
+
+
+
 
   onClickButton = e =>{
     e.preventDefault()
@@ -419,14 +603,15 @@ componentDidMount() {
             <ul className="cucclist">
                           {this.state.lista.filter(item => item.vendeg === this.state.cimnev).map((item) => {
                            let szamlalo = item.szamlalo;
-                           const itemsRefs = Firebase.database().ref('tetelek/' + item.id);
+                           //const itemsRefs = Firebase.database().ref('tetelek/' + item.id);
                            return (
                               <li  key={item.id}>
                                 <div className="tetelelista">
                                   <div className="szamlalo">{item.ar * szamlalo} Ft</div>
+                                  <div className="szamlalo">{szamlalo} db</div>
                                   <div className="cucclihozz">{item.tetel}</div>
-                                  <div className="szamlalop" onClick={() => {itemsRefs.update({szamlalo: szamlalo++})}}>+</div>
-                                  <div className="szamlalom" onClick={() => {itemsRefs.update({szamlalo: szamlalo--})}}>-</div>
+                                  <div className="szamlalop" onClick={() => this.incrementSzamlalo(item.id)}>+</div>
+                                  <div className="szamlalom" onClick={() => this.decrementSzamlalo(item.id)}>-</div>
                                   <div className="szamlalok" onClick={() => {this.setState({openModalll: true}); this.setState({idt: item.id})}}>törlés</div>
                                 </div>
                               </li>

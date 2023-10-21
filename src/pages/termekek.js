@@ -110,7 +110,7 @@ handleSearchChange = (event) => {
         </ul>
 
         <Modal open={this.state.openModal} onClose={this.onCloseModal}>
-            <div style={{width: "74vw", height: "50vh"}}>
+            <div style={{width: "74vw", height: "70vh"}}>
                 <div className="modal-content">
                     <h2>A következő módosítása: {this.state.selectedItem?.nev}</h2>
 
