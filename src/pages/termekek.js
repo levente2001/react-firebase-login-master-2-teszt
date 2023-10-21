@@ -140,9 +140,9 @@ handleSearchChange = (event) => {
            return (
               <li  key={item.id}>
                 <div className="tetelelistaterme" style={this.getQuantityStyle(item.quantity)}>
-                  <div className="szamlalomasik">{item.nev}</div>
-                  <div className="cucclihozzmasik">{item.ar} Ft</div>
-                  <div className="cucclihozzmasik">{item.quantity} db</div>
+                  <div className="szamlalomasik" style={this.getQuantityStyle(item.quantity)}>{item.nev}</div>
+                  <div className="cucclihozzmasik" style={this.getQuantityStyle(item.quantity)}>{item.ar} Ft</div>
+                  <div className="cucclihozzmasik" style={this.getQuantityStyle(item.quantity)}>{item.quantity} db</div>
                   <div className="szamlalok" onClick={() => {this.setState({openModal: true}); this.setState({selectedItem: item})}}>edit</div>
                 </div>
               </li>
