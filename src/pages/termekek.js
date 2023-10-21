@@ -98,7 +98,7 @@ handleSearchChange = (event) => {
            return (
               <li  key={item.id}>
                 <div className="tetelelistaterme">
-                  <div className="szamlalo">{item.nev}</div>
+                  <div className="szamlalomasik">{item.nev}</div>
                   <div className="cucclihozzmasik">{item.ar} Ft</div>
                   <div className="cucclihozzmasik">{item.quantity} db</div>
                   <div className="szamlalok" onClick={() => {this.setState({openModal: true}); this.setState({selectedItem: item})}}>edit</div>

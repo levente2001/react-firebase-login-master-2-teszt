@@ -292,10 +292,10 @@ ul.cucclisttermekek li {
 .cucclihozzmasik {
   background-color: #AEB6BF;
   border-radius: 10px;
-  width: 15vw;
+  width: 10vw;
   line-height: 2em;
   text-align: center;
-  margin-left: 150px;
+  margin-left: 130px;
   height: 2em;
   font-size: 15px;
   color: #000;
@@ -309,6 +309,19 @@ ul.cucclisttermekek li {
   background-color: #AEB6BF;
   border-radius: 10px;
   width: 200px;
+  line-height: 2em;
+  text-align: center;
+  height: 2em;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+
+}
+
+.szamlalomasik {
+  background-color: #AEB6BF;
+  border-radius: 10px;
+  width: 300px;
   line-height: 2em;
   text-align: center;
   height: 2em;
