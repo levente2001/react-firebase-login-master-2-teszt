@@ -167,11 +167,17 @@ ul.cucclist {
 
 ul.cucclisttermekek {
   padding: 10px;
-  width: 74vw;
+  width: 85vw;
   height: 80vh;
   margin: auto;
   list-style-type: none;
   overflow: auto;
+  -ms-overflow-style: none;
+   scrollbar-width: none;  
+}
+
+ul.cucclisttermekek::-webkit-scrollbar {
+  display: none;
 }
 
 
@@ -247,7 +253,7 @@ ul.cucclisttermekek li {
   background-color: #fff;
   border-radius: 10px;
   margin-bottom: 30px;
-  width: 70vw;
+  width: 100%;
   line-height: 2em;
   height: 2em;
   color: #fff;
@@ -370,7 +376,20 @@ ul.cucclisttermekek li {
   height: 2em;
   color: #fff;
   font-weight: bold;
+}
 
+.tetelelistaterme {
+  background-color: #AEB6BF;
+  border-radius: 10px;
+  width: 95%;
+  line-height: 2em;
+  padding: 10px;
+  margin: 10px;
+  text-align: center;
+  display: flex;
+  height: 2em;
+  color: #fff;
+  font-weight: bold;
 }
 
 

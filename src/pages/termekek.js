@@ -97,7 +97,7 @@ handleSearchChange = (event) => {
           {filteredList.map((item) => {
            return (
               <li  key={item.id}>
-                <div className="tetelelista">
+                <div className="tetelelistaterme">
                   <div className="szamlalo">{item.nev}</div>
                   <div className="cucclihozzmasik">{item.ar} Ft</div>
                   <div className="cucclihozzmasik">{item.quantity} db</div>
