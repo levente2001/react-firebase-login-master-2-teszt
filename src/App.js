@@ -5,6 +5,8 @@ import Home from "./pages/home";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
 import Admin from "./pages/admin";
+import Termekek from "./pages/termekek";
+import Raktarkeszlet from "./pages/raktarkeszlet";
 
 import "./App.css";
 
@@ -25,6 +27,12 @@ function App() {
           </Route>
           <Route path="/signup">
             <Signup />
+          </Route>
+          <Route path="/termekek">
+            <Termekek />
+          </Route>
+          <Route path="/raktar">
+            <Raktarkeszlet />
           </Route>
         </Switch>
       </div>

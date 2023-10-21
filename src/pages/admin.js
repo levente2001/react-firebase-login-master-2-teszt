@@ -11,10 +11,14 @@ class Admin extends React.Component {
     return (
       <div className="main">
         <div className="cont">
-          <div className="termhozzaadas">Termék Hozzáadás</div>
-          <div className="egy"> Funkció2</div>
-          <div className="ketto"> Funkció3</div>
-          <div className="harom"> Funkció4</div>
+          <Link style={{textDecoration: "none", color: "white"}} to="/termekek">
+            <div className="termhozzaadas">Termékek</div>
+          </Link>
+          {/*<Link style={{textDecoration: "none", color: "white"}} className="egy" to="/raktar">
+            <div className="termhozzaadas egy">Raktárkészlet</div>
+    </Link>*/}
+          <div className="ketto"> Zárás</div>
+          <div className="harom"> NTAK jelentés</div>
         </div>
         
         <Link to="/">Vissza</Link>

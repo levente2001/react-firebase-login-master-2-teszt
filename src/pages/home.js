@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 //import ReactModal from 'react-modal';
 import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
@@ -325,9 +325,9 @@ componentDidMount() {
               <button className="buttonr" onClick={handleSignOut}> Kijelentkezés </button>
               {/*<button className="button" onClick={this.handleZaras}> ZÁRÁS </button>*/}
             </div>
-            {/*<div className="inner">
+            <div className="inner">
             <Link to="/admin">Admin</Link>
-            </div>*/}
+            </div>
           </div>
 
           
