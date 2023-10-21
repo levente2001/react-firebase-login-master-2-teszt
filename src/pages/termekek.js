@@ -53,11 +53,12 @@ componentDidMount() {
 
 
 handleUpdateQuantity = () => {
-    if (this.state.selectedItem && this.quantityInput && this.priceInput) {
+    if (this.state.selectedItem && this.quantityInput && this.priceInput && this.nevInput) {
         const newQuantity = this.quantityInput.value;
         const newPrice = this.priceInput.value;
+        const newNev = this.nevInput.value;
         const itemsRef = Firebase.database().ref('products').child(this.state.selectedItem.id);
-        itemsRef.update({ quantity: newQuantity, ar: newPrice });
+        itemsRef.update({ quantity: newQuantity, ar: newPrice, nev: newNev });
         
         this.setState({ openModal: false, selectedItem: null });
     }
@@ -119,7 +120,7 @@ handleSearchChange = (event) => {
                             <input 
                                 className="input" 
                                 type="number" 
-                                defaultValue={this.state.selectedItem?.ar} 
+                                defaultValue={this.state.selectedItem?.quantity} 
                                 ref={(input) => this.quantityInput = input} 
                             />
                         </div>
@@ -132,6 +133,15 @@ handleSearchChange = (event) => {
                                 placeholder="Price"
                                 defaultValue={this.state.selectedItem?.ar}   
                                 ref={(input) => this.priceInput = input} 
+                            />
+                        </div>
+                        <label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}} htmlFor="priceInput">Név:</label>
+                        <div style={{width: "100%"}}>
+                            <input
+                                className="input width60p"
+                                placeholder="Név"
+                                defaultValue={this.state.selectedItem?.nev}   
+                                ref={(input) => this.nevInput = input} 
                             />
                         </div>
                     </div>
