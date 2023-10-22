@@ -123,7 +123,7 @@ class Home extends React.Component {
     const itemsRefP = Firebase.database().ref('tetelek/');
     const itemsRefR = Firebase.database().ref('rev');
     let numbers = this.state.lista;
-    let result = numbers.filter(item => item.vendeg === this.state.cimnev).reduce((total, currentValue) => total = total + currentValue.ar,0);
+    let result = numbers.filter(item => item.vendeg === this.state.cimnev).reduce((total, currentValue) => total = total + currentValue.ar * currentValue.szamlalo,0);  
     itemsRefR.push({
       vegosszeg: result
     })
@@ -486,7 +486,7 @@ componentDidMount() {
     let numbers = this.state.lista;
     let result = numbers.filter(item => item.vendeg === this.state.cimnev).reduce((total, currentValue) => total = total + currentValue.ar * currentValue.szamlalo,0);           
     let bevtl = this.state.bevtl;
-    let resultt = bevtl.reduce((total, currentValue) => total = total + currentValue.ossz,0);
+    let resultt = bevtl.reduce((total, currentValue) => total + currentValue.ossz,0);
   
     return (
       <div className="container">
@@ -509,8 +509,8 @@ componentDidMount() {
               <button className="buttonr" onClick={handleSignOut}> Kijelentkezés </button>
               {/*<button className="button" onClick={this.handleZaras}> ZÁRÁS </button>*/}
             </div>
-            <div className="inner">
-            <Link to="/admin">Admin</Link>
+            <div className="inner" style={{width: "100%", marginTop: 10}}>
+              <Link style={{textDecoration: "none", backgroundColor: "#70B69F", padding: 8, borderRadius: 10, color: "white", fontWeight: "bold"}} to="/admin">Admin</Link>
             </div>
           </div>
 

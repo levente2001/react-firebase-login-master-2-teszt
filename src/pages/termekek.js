@@ -94,13 +94,13 @@ handleDeleteItem = (itemId) => {
 
 getQuantityStyle = (quantity) => {
     if (quantity < 10) {
-      return {backgroundColor: 'red'};
+      return {backgroundColor: '#DC5E5E'};
     } else if (quantity >= 10 && quantity < 20) {
-      return {backgroundColor: 'orange'};
+      return {backgroundColor: '#E8A86F'};
     } else if (quantity >= 20 && quantity < 30) {
-      return {backgroundColor: 'yellow'};
+      return {backgroundColor: '#F7F76D'};
     } else {
-        return {backgroundColor: 'green'};
+        return {backgroundColor: '#70B69F'};
     }
   }
   
@@ -120,7 +120,7 @@ handleSearchChange = (event) => {
 
         <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", width: "60vw"}}>
             <Link style={{textDecoration: "none", color: "grey", fontWeight: "bold"}} to="/admin">Vissza</Link>
-            <button className="buttonr" onClick={this.onClickButtonn}>+</button>
+            <button className="buttonr" style={{backgroundColor: '#70B69F'}} onClick={this.onClickButtonn}>+</button>
             <input
                 type="text"
                 placeholder="Keresés..."
@@ -188,8 +188,8 @@ handleSearchChange = (event) => {
                     </div>
 
                     
-                    <button className="margin" onClick={this.handleUpdateQuantity}>Frissítés</button>
-                    <button className="margin" style={{ backgroundColor: 'red' }} onClick={() => this.handleDeleteItem(this.state.selectedItem.id)}>Delete</button>
+                    <button className="margin" style={{backgroundColor: '#70B69F'}} onClick={this.handleUpdateQuantity}>Frissítés</button>
+                    <button className="margin" style={{ backgroundColor: '#DC5E5E' }} onClick={() => this.handleDeleteItem(this.state.selectedItem.id)}>Törlés</button>
                 </div>
             </div>
         </Modal>
