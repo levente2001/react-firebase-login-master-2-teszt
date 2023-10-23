@@ -46,6 +46,7 @@ class Home extends React.Component {
       bevtl: [],
       user: '',
       szamlalo: null,
+      isVisible: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -355,7 +356,32 @@ handleSubmitTerm(e) {
   });
 }
 
+toggleFullScreen() {
+  let elem = document.documentElement;
 
+  if (!document.fullscreenElement && !document.mozFullScreenElement &&
+      !document.webkitFullscreenElement && !document.msFullscreenElement) {
+      if (elem.requestFullscreen) {
+          elem.requestFullscreen();
+      } else if (elem.mozRequestFullScreen) {
+          elem.mozRequestFullScreen();
+      } else if (elem.webkitRequestFullscreen) {
+          elem.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
+      } else if (elem.msRequestFullscreen) {
+          elem.msRequestFullscreen();
+      }
+  } else {
+      if (document.exitFullscreen) {
+          document.exitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+      } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+      }
+  }
+}
 
 
   onClickButton = e =>{
@@ -392,27 +418,13 @@ onCloseMmodallll = ()=>{
 
 componentDidMount() {
   initialize();
-  Firebase.auth().onAuthStateChanged(function(user) {
-    switch (user.email) {
-      case 'lalivaroskut@gmail.com' :
-        console.log("Lali");
-        break;
-      case 'zsuzsavaroskut@gmail.com' :
-        console.log("Zsuzsa");
-        break;
-      case 'kalolevente@gmail.com' :
-        console.log("Levi");
-        break;
-      case 'rebekavaroskut@gmail.com' :
-        console.log("Rebeka");
-        break;
-      case 'kbela0990@gmail.com' :
-        console.log("TestName");
-        break;
-      default: 
-        console.log("Sorry nobody is logged in!")
+  Firebase.auth().onAuthStateChanged((user) => {
+    if (user.email === 'kalolevente@gmail.com') {
+      this.setState({ isVisible: true });
+    } else {
+      this.setState({ isVisible: false });
     }
-});
+  });
   const itemsRef = Firebase.database().ref('items');
   const itemsRefT = Firebase.database().ref('products');
   const itemsRefR = Firebase.database().ref('rev');
@@ -508,10 +520,13 @@ componentDidMount() {
             <div className="inner">
               <button className="buttonr" onClick={handleSignOut}> Kijelentkezés </button>
               {/*<button className="button" onClick={this.handleZaras}> ZÁRÁS </button>*/}
+              <button style={{textDecoration: "none", backgroundColor: "#70B69F", padding: 8, borderRadius: 10, color: "white", fontWeight: "bold", width: 100, margin: 10}}  onClick={this.toggleFullScreen.bind(this)}>Teljes</button>
             </div>
-            <div className="inner" style={{width: "100%", marginTop: 10}}>
-              <Link style={{textDecoration: "none", backgroundColor: "#70B69F", padding: 8, borderRadius: 10, color: "white", fontWeight: "bold"}} to="/admin">Admin</Link>
-            </div>
+            {this.state.isVisible && (
+              <div className="inner" style={{ width: "100%", marginTop: 10 }}>
+                <Link style={{ textDecoration: "none", backgroundColor: "#70B69F", padding: 8, borderRadius: 10, color: "white", fontWeight: "bold" }} to="/admin">Admin</Link>
+              </div>
+            )}
           </div>
 
           
