@@ -17,8 +17,8 @@ class Admin extends React.Component {
           <Link style={{textDecoration: "none", color: "white"}} className="egy" to="/raktar">
             <div className="termhozzaadas egy">Raktárkészlet</div>
           </Link>
-          <div className="ketto"> Zárás</div>
-          <div className="harom"> NTAK jelentés</div>
+          <div className="ketto">Zárás</div>
+          <div className="harom">Nyitás</div>
         </div>
         
         <Link to="/">Vissza</Link>

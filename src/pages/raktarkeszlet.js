@@ -18,7 +18,13 @@ class Raktarkeszlet extends React.Component {
           openModal: false,
           selectedItem: '',
           selectedCategory: '',
+          selectedQuantitytype: '',
+          ingredientName: '',
+          quantity: ''
         };
+        this.handleChangeIngredientName = this.handleChangeIngredientName.bind(this);
+        this.handleChangeQuantity = this.handleChangeQuantity.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
 onClickButton = e =>{
@@ -39,10 +45,41 @@ onClickButtonn = e =>{
      this.setState({openModall : false})
    }
 
+
+   handleChangeIngredientName(e) {
+    this.setState({ ingredientName: e.target.value });
+}
+
+handleChangeQuantity(e) {
+    this.setState({ quantity: e.target.value });
+}
+
+
+handleSubmit(e) {
+  e.preventDefault();
+
+  const warehouseRef = Firebase.database().ref(`warehouse/${this.state.ingredientName}`);
+  warehouseRef.set({
+      name: this.state.ingredientName,
+      quantity: parseFloat(this.state.quantity),
+      type: this.state.selectedQuantitytype,
+  });
+
+  // Reset the form
+  this.setState({
+      ingredientName: '',
+      quantity: '',
+      selectedQuantitytype: ''
+  });
+
+  this.onCloseModall();
+}
+
+
 componentDidMount() {
     initialize();
 
-    const itemsRef = Firebase.database().ref('products');
+    const itemsRef = Firebase.database().ref('warehouse');
 
 
     itemsRef.on('value', (snapshot) => {
@@ -51,9 +88,9 @@ componentDidMount() {
         for (let item in items) {
           newState.push({
             id: item,
-            nev: items[item].nev,
-            ar: items[item].ar,
+            nev: items[item].name,
             quantity: items[item].quantity,
+            type: items[item].type
           });
         }
         this.setState({
@@ -64,29 +101,34 @@ componentDidMount() {
 
 
 handleUpdateQuantity = () => {
-    if (this.state.selectedItem && this.quantityInput) {
-        const newQuantity = this.quantityInput.value;
-        const itemsRef = Firebase.database().ref('products').child(this.state.selectedItem.id);
-        itemsRef.update({ quantity: newQuantity});
-        
-        this.setState({ openModal: false, selectedItem: null });
-    }
+  if (this.state.selectedItem && this.quantityInput && this.ingredientNameInput) {
+      const newQuantity = this.quantityInput.value;
+      const newIngredientName = this.ingredientNameInput.value;
+      
+      const itemsRef = Firebase.database().ref('warehouse').child(this.state.selectedItem.id);
+      itemsRef.update({ 
+          name: newIngredientName,
+          quantity: newQuantity 
+      });
+      
+      this.setState({ openModal: false, selectedItem: null });
+  }
 }
 
+
 handleAddItem = () => {
-    const itemsRef = Firebase.database().ref('products');
+    const itemsRef = Firebase.database().ref('warehouse');
     const newItem = {
-        nev: this.nevInput.value,
-        ar: this.priceInput.value,
-        quantity: this.quantityInput.value,
-        cat: this.state.selectedCategory,
+        nev: this.state.ingredientName,
+        quantity: this.state.quantity,
+        type: this.state.selectedQuantitytype,
     };
     itemsRef.push(newItem);
     this.onCloseModall();
 }
 
 handleDeleteItem = (itemId) => {
-    const itemsRef = Firebase.database().ref('products').child(itemId);
+    const itemsRef = Firebase.database().ref('warehouse').child(itemId);
     itemsRef.remove();
     this.setState({ openModal: false, selectedItem: null });
 }
@@ -141,8 +183,8 @@ handleSearchChange = (event) => {
               <li  key={item.id}>
                 <div className="tetelelistaterme" style={this.getQuantityStyle(item.quantity)}>
                   <div className="szamlalomasik" style={this.getQuantityStyle(item.quantity)}>{item.nev}</div>
-                  <div className="cucclihozzmasik" style={this.getQuantityStyle(item.quantity)}>{item.ar} Ft</div>
-                  <div className="cucclihozzmasik" style={this.getQuantityStyle(item.quantity)}>{item.quantity} db</div>
+                  <div className="cucclihozzmasik" style={this.getQuantityStyle(item.quantity)}> </div>
+                  <div className="cucclihozzmasik" style={this.getQuantityStyle(item.quantity)}>{item.quantity} {item.type}</div>
                   <div className="szamlalok" onClick={() => {this.setState({openModal: true}); this.setState({selectedItem: item})}}>edit</div>
                 </div>
               </li>
@@ -156,6 +198,14 @@ handleSearchChange = (event) => {
                     <h2>A következő módosítása: {this.state.selectedItem?.nev}</h2>
 
                     <div style={{display: "flex", flexDirection: "column"}}>
+                      <label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}}  htmlFor="quantityInput">Név:</label>
+                        <div style={{width: "100%"}}>
+                          <input 
+                                  className="input width60p"
+                                  defaultValue={this.state.selectedItem?.nev} 
+                                  ref={(input) => this.ingredientNameInput = input} 
+                              />
+                        </div>
                         <label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}}  htmlFor="quantityInput">Mennyiség:</label>
                         <div style={{width: "100%"}}>
                             <input 
@@ -175,12 +225,12 @@ handleSearchChange = (event) => {
         </Modal>
 
         <Modal open={this.state.openModall} onClose={this.onCloseModall}>
-            <div style={{width: "74vw", height: "70vh"}}>
+            <div style={{width: "74vw", height: "75vh"}}>
                 <div className="modal-content">
-                    <h2>A következő módosítása: {this.state.selectedItem?.nev}</h2>
+                    <h2>Új termék hozzáadása{this.state.selectedItem?.nev}</h2>
 
                     <div style={{display: "flex", flexDirection: "column"}}>
-                        <label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}}  htmlFor="quantityInput">Mennyiség:</label>
+                        {/*<label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}}  htmlFor="quantityInput">Mennyiség:</label>
                         <div style={{width: "100%"}}>
                             <input 
                                 className="input" 
@@ -199,7 +249,28 @@ handleSearchChange = (event) => {
                                 defaultValue={this.state.selectedItem?.ar}   
                                 ref={(input) => this.priceInput = input} 
                             />
+                            
                         </div>
+
+                        <label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}} htmlFor="priceInput">Mértékegység:</label>
+                        <div style={{width: "100%"}}>
+                        <select 
+                                id="categoryInput"
+                                className="input "
+                                value={this.state.selectedQuantitytype} 
+                                onChange={(e) => this.setState({ selectedQuantitytype: e.target.value })}
+                            >
+                                <option value="l">l</option>
+                                <option value="dl">dl</option>
+                                <option value="cl">cl</option>
+                                <option value="db">db</option>
+                                <option value="kg">kg</option>
+                                <option value="g">g</option>
+                            </select>
+
+                        </div>
+
+
                         <label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}} htmlFor="priceInput">Név:</label>
                         <div style={{width: "100%"}}>
                             <input
@@ -228,10 +299,48 @@ handleSearchChange = (event) => {
                                 <option value="jeges italok">Jeges Italok</option>
                             </select>
                         </div>
+        */}
+                      <label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}} htmlFor="priceInput">Név:</label>
+                      <div style={{width: "100%"}}>
+                        <input
+                              className="input width60p"
+                              placeholder="Név"
+                              value={this.state.ingredientName}
+                              onChange={this.handleChangeIngredientName}
+                          />
+                      </div>
+                      <label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}} htmlFor="priceInput">Mennyiség:</label>
+                      <div style={{width: "100%"}}>
+                        <input
+                              className="input"
+                              type="number"
+                              placeholder="Mennyiség"
+                              value={this.state.quantity}
+                              onChange={this.handleChangeQuantity}
+                          />
+                      </div>
                     </div>
 
+                    <label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}} htmlFor="priceInput">Mértékegység:</label>
+                        <div style={{width: "100%"}}>
+                        <select 
+                                id="categoryInput"
+                                className="input "
+                                value={this.state.selectedQuantitytype} 
+                                onChange={(e) => this.setState({ selectedQuantitytype: e.target.value })}
+                            >
+                                <option value="l">l</option>
+                                <option value="dl">dl</option>
+                                <option value="cl">cl</option>
+                                <option value="db">db</option>
+                                <option value="kg">kg</option>
+                                <option value="g">g</option>
+                            </select>
+
+                        </div>
+
                     
-                    <button className="margin" onClick={this.handleAddItem}>Hozzáadás</button>
+                    <button className="margin" onClick={this.handleSubmit}>Hozzáadás</button>
                 </div>
             </div>
         </Modal>

@@ -151,7 +151,8 @@ class Home extends React.Component {
     initialize();
     
     const itemsRef = Firebase.database().ref('tetelek/' + this.state.idt);
-    const productsRef = Firebase.database().ref('products');
+    const productsRef = Firebase.database().ref('sale');
+    const warehouseRef = Firebase.database().ref('warehouse');
   
     // Fetch the current state of the item to get its tetel and szamlalo
     itemsRef.once('value', itemSnapshot => {
@@ -169,11 +170,29 @@ class Home extends React.Component {
             const productId = Object.keys(products)[0];
             const productData = products[productId];
   
+            // If the product has an ingredients list, replenish ingredient quantities in the warehouse
+            if (productData.ingredients) {
+              for (let ingredientName in productData.ingredients) {
+                const usedQuantity = productData.ingredients[ingredientName] * szamlaloValue;
+
+                // Retrieve the current quantity of the ingredient from the warehouse
+                warehouseRef.child(ingredientName).once('value', ingredientSnapshot => {
+                  const ingredientInWarehouse = ingredientSnapshot.val();
+
+                  if (ingredientInWarehouse) {
+                    // Add the used quantity back to the current quantity in the warehouse
+                    const newQuantity = ingredientInWarehouse.quantity + usedQuantity;
+
+                    // Update the warehouse with the new quantity
+                    warehouseRef.child(ingredientName).update({ quantity: newQuantity });
+                  }
+                });
+              }
+            }
+
+            // (Optional) If you also want to increment the product's quantity (if any), you can keep this
             if (typeof productData.quantity !== 'undefined') {
-              // Calculate the new quantity (increment by the item's szamlalo value)
               const newQuantity = productData.quantity + szamlaloValue;
-  
-              // Update the quantity in the database for the product
               productsRef.child(productId).update({ quantity: newQuantity });
             }
           }
@@ -188,13 +207,13 @@ class Home extends React.Component {
         });
       }
     });
-  }
-  
+}
 
   
+
   decrementSzamlalo = (itemId) => {
     const itemRef = Firebase.database().ref('tetelek/' + itemId);
-    const productsRef = Firebase.database().ref('products');
+    const productsRef = Firebase.database().ref('sale');
   
     // Fetch the current state of the item
     itemRef.once('value', itemSnapshot => {
@@ -202,7 +221,7 @@ class Home extends React.Component {
   
       if (itemData) {
         // If szamlalo exists in item, increment it, otherwise set it to 1
-        const newSzamlalo = Math.max(0, (itemData.szamlalo || 0) - 1);
+        const newSzamlalo = (itemData.szamlalo || 0) - 1;
         
         // Update the szamlalo in the database for the item
         itemRef.update({ szamlalo: newSzamlalo });
@@ -219,67 +238,100 @@ class Home extends React.Component {
             const productId = Object.keys(products)[0];
             const productData = products[productId];
   
-            if (typeof productData.quantity !== 'undefined') {
-              // Calculate the new quantity (decrement by the incremented szamlalo value)
-              const newQuantity = parseInt(productData.quantity, 10) + 1;
+            // Deduct the ingredient quantities for the added product
+            if (productData && productData.ingredients) {
+                const ingredientData = productData.ingredients;
   
-              // Update the quantity in the database for the product
-              productsRef.child(productId).update({ quantity: newQuantity });
+                // Loop through each ingredient associated with the product
+                for (let ingredientName in ingredientData) {
+                    const requiredQuantity = ingredientData[ingredientName];
+  
+                    // Retrieve the current quantity of the ingredient from the warehouse in Firebase
+                    const warehouseRef = Firebase.database().ref(`warehouse/${ingredientName}`);
+                    warehouseRef.once('value', ingredientSnapshot => {
+                        const ingredientInWarehouse = ingredientSnapshot.val();
+  
+                        if (ingredientInWarehouse) {
+                            // Deduct the required quantity from the current quantity in the warehouse
+                            const newQuantity = ingredientInWarehouse.quantity + requiredQuantity;
+  
+                            // Update the warehouse with the new quantity
+                            warehouseRef.update({ quantity: newQuantity });
+                        }
+                    });
+                }
             }
           }
         });
       }
     });
   }
+  
 
-
-incrementSzamlalo = (itemId) => {
-  const itemRef = Firebase.database().ref('tetelek/' + itemId);
-  const productsRef = Firebase.database().ref('products');
-
-  // Fetch the current state of the item
-  itemRef.once('value', itemSnapshot => {
-    const itemData = itemSnapshot.val();
-
-    if (itemData) {
-      // If szamlalo exists in item, increment it, otherwise set it to 1
-      const newSzamlalo = (itemData.szamlalo || 0) + 1;
-      
-      // Update the szamlalo in the database for the item
-      itemRef.update({ szamlalo: newSzamlalo });
-
-      // Also update the szamlalo in your component's state (if needed)
-      this.setState({ szamlalo: newSzamlalo });
-
-      // Now, fetch the product by its name (assumed to be stored in itemData.tetel)
-      productsRef.orderByChild('nev').equalTo(itemData.tetel).once('value', productSnapshot => {
-        const products = productSnapshot.val();
-
-        // Assuming product names are unique, there should be only one matching product
-        if (products) {
-          const productId = Object.keys(products)[0];
-          const productData = products[productId];
-
-          if (typeof productData.quantity !== 'undefined') {
-            // Calculate the new quantity (decrement by the incremented szamlalo value)
-            const newQuantity = productData.quantity - 1;
-
-            // Update the quantity in the database for the product
-            productsRef.child(productId).update({ quantity: newQuantity });
+  incrementSzamlalo = (itemId) => {
+    const itemRef = Firebase.database().ref('tetelek/' + itemId);
+    const productsRef = Firebase.database().ref('sale');
+  
+    // Fetch the current state of the item
+    itemRef.once('value', itemSnapshot => {
+      const itemData = itemSnapshot.val();
+  
+      if (itemData) {
+        // If szamlalo exists in item, increment it, otherwise set it to 1
+        const newSzamlalo = (itemData.szamlalo || 0) + 1;
+        
+        // Update the szamlalo in the database for the item
+        itemRef.update({ szamlalo: newSzamlalo });
+  
+        // Also update the szamlalo in your component's state (if needed)
+        this.setState({ szamlalo: newSzamlalo });
+  
+        // Now, fetch the product by its name (assumed to be stored in itemData.tetel)
+        productsRef.orderByChild('nev').equalTo(itemData.tetel).once('value', productSnapshot => {
+          const products = productSnapshot.val();
+  
+          // Assuming product names are unique, there should be only one matching product
+          if (products) {
+            const productId = Object.keys(products)[0];
+            const productData = products[productId];
+  
+            // Deduct the ingredient quantities for the added product
+            if (productData && productData.ingredients) {
+                const ingredientData = productData.ingredients;
+  
+                // Loop through each ingredient associated with the product
+                for (let ingredientName in ingredientData) {
+                    const requiredQuantity = ingredientData[ingredientName];
+  
+                    // Retrieve the current quantity of the ingredient from the warehouse in Firebase
+                    const warehouseRef = Firebase.database().ref(`warehouse/${ingredientName}`);
+                    warehouseRef.once('value', ingredientSnapshot => {
+                        const ingredientInWarehouse = ingredientSnapshot.val();
+  
+                        if (ingredientInWarehouse) {
+                            // Deduct the required quantity from the current quantity in the warehouse
+                            const newQuantity = ingredientInWarehouse.quantity - requiredQuantity;
+  
+                            // Update the warehouse with the new quantity
+                            warehouseRef.update({ quantity: newQuantity });
+                        }
+                    });
+                }
+            }
           }
-        }
-      });
-    }
-  });
-}
-
+        });
+      }
+    });
+  }
+  
 
 
 handleSubmitTerm(e) {
   e.preventDefault();
   initialize();
   const itemsRef = Firebase.database().ref('tetelek');
-  const productsRef = Firebase.database().ref('products');
+  const productsRef = Firebase.database().ref('sale');
+  const warehouseRef = Firebase.database().ref('warehouse');
   const { cimnev, tetel, ar, szamlalo } = this.state;
 
   // Filter by tetel
@@ -328,23 +380,35 @@ handleSubmitTerm(e) {
       itemsRef.push(item);
     }
 
-    // Decrement product quantity
-    productsRef.orderByChild('nev').equalTo(tetel).once('value', productSnapshot => {
-      const products = productSnapshot.val();
+    // After adding the item or updating szamlalo, fetch the product details
+  productsRef.orderByChild('nev').equalTo(tetel).once('value', productSnapshot => {
+    const products = productSnapshot.val();
 
-      if (products) {
-        const productId = Object.keys(products)[0];
-        const productData = products[productId];
+    if (products) {
+      const productId = Object.keys(products)[0];
+      const productData = products[productId];
 
-        if (typeof productData.quantity !== 'undefined') {
-          // Calculate the new quantity (decrement by 1)
-          const newQuantity = productData.quantity - 1;
+      // If the product has an ingredients list, decrement ingredient quantities from the warehouse
+      if (productData.ingredients) {
+        for (let ingredientName in productData.ingredients) {
+          const requiredQuantity = productData.ingredients[ingredientName];
 
-          // Update the quantity in the database for the product
-          productsRef.child(productId).update({ quantity: newQuantity });
+          // Retrieve the current quantity of the ingredient from the warehouse
+          warehouseRef.child(ingredientName).once('value', ingredientSnapshot => {
+            const ingredientInWarehouse = ingredientSnapshot.val();
+
+            if (ingredientInWarehouse) {
+              // Deduct the required quantity from the current quantity in the warehouse
+              const newQuantity = ingredientInWarehouse.quantity - requiredQuantity;
+
+              // Update the warehouse with the new quantity
+              warehouseRef.child(ingredientName).update({ quantity: newQuantity });
+            }
+          });
         }
       }
-    });
+    }
+  });
 
     // Reset component state
     this.setState({
@@ -426,7 +490,7 @@ componentDidMount() {
     }
   });
   const itemsRef = Firebase.database().ref('items');
-  const itemsRefT = Firebase.database().ref('products');
+  const itemsRefT = Firebase.database().ref('sale');
   const itemsRefR = Firebase.database().ref('rev');
   const itemsRefP = Firebase.database().ref('tetelek');
   itemsRefR.on('value', (snapshot) => {
@@ -457,11 +521,16 @@ componentDidMount() {
     let items = snapshot.val();
     let newState = [];
     for (let item in items) {
+      let currentItem = items[item];
       newState.push({
         id: item,
         cat: items[item].cat,
         ar: items[item].ar,
-        nev: items[item].nev
+        nev: items[item].nev,
+        ingredients: currentItem.ingredients ? Object.entries(currentItem.ingredients).map(([ingName, quantity]) => ({
+          name: ingName,
+          quantity: quantity
+      })) : []
       });
     }
     this.setState({
