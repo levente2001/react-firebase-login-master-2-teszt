@@ -299,7 +299,7 @@ handleSearchChange = (event) => {
                                 value={ingredient.name}
                                 onChange={(e) => this.handleInputChange(index, 'name', e.target.value)}
                             >
-                                <option value="" disabled>Select Ingredient</option>
+                                <option value="" disabled>Hozzávaló</option>
                                 {this.state.ingredientOptions.map((ingredientName, idx) => (
                                     <option key={idx} value={ingredientName}>
                                         {ingredientName}
@@ -324,7 +324,7 @@ handleSearchChange = (event) => {
                                 value={this.state.selectedCategory} 
                                 onChange={(e) => this.setState({ selectedCategory: e.target.value })}
                             >
-                                <option value="valassz">Válassz</option>
+                                <option value="" disabled>Válassz kategóriát</option>
                                 <option value="meleg">Meleg</option>
                                 <option value="üdítők">Üdítők</option>
                                 <option value="borok">Borok</option>
@@ -339,9 +339,9 @@ handleSearchChange = (event) => {
                     </div>
 
                     
-                    <button className="margin" style={{marginTop: 20}} onClick={this.handleAddItem}>Hozzáadás</button>
+                    {/*<button className="margin" style={{marginTop: 20}} onClick={this.handleAddItem}>Hozzáadás</button>*/}
                     <button type="button" onClick={this.handleAddIngredient}>Add Ingredient</button>
-                    <button onClick={this.handleSubmit}>Add Product</button>
+                    <button className="margin" style={{backgroundColor: "#70B69F"}} onClick={this.handleSubmit}>Add Product</button>
                 </div>
             </div>
         </Modal>

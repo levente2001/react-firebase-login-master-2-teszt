@@ -321,7 +321,7 @@ handleSearchChange = (event) => {
                       </div>
                     </div>
 
-                    <label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}} htmlFor="priceInput">Mértékegység:</label>
+                        <label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}} htmlFor="priceInput">Mértékegység:</label>
                         <div style={{width: "100%"}}>
                         <select 
                                 id="categoryInput"
@@ -329,6 +329,7 @@ handleSearchChange = (event) => {
                                 value={this.state.selectedQuantitytype} 
                                 onChange={(e) => this.setState({ selectedQuantitytype: e.target.value })}
                             >
+                                <option value="" disabled>Válassz kategóriát</option>
                                 <option value="l">l</option>
                                 <option value="dl">dl</option>
                                 <option value="cl">cl</option>
