@@ -370,7 +370,7 @@ ul.cucclisttermekek li {
   line-height: 2em;
   text-align: center;
   font-weight: bold;
-  margin-left: 200px;
+  margin-left: 60px;
   height: 2em;
   font-size: 1em;
   padding-left: 10px;
@@ -604,13 +604,19 @@ form {
   p {
     font-size: 25px;
   }
+
+  .szamlalo {
+    width: 200px;
+  }
+
   .szamlalok {
-    width: 90px;
+    width: 120px;
+    margi-left: 20px;
   }
   .szamlalom {
-    width: 90px;
+    width: 120px;
   }
   .szamlalop {
-    width: 90px;
+    width: 120px;
   }
 }

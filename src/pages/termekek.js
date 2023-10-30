@@ -310,12 +310,15 @@ handleSearchChange = (event) => {
                                 className="input"
                                 style={{margin: 5}}
                                 type="number"
-                                placeholder="Quantity"
+                                placeholder="Mennyiség"
                                 value={ingredient.quantity}
                                 onChange={(e) => this.handleInputChange(index, 'quantity', e.target.value)}
                             />
                         </div>
                     ))}
+                    <div style={{width: "100%"}}>
+                        <button type="button" onClick={this.handleAddIngredient}>+ hozzávaló</button>
+                        </div>
                         <label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}} htmlFor="categoryInput">Kategória:</label>
                         <div style={{width: "100%"}}>
                             <select 
@@ -340,8 +343,8 @@ handleSearchChange = (event) => {
 
                     
                     {/*<button className="margin" style={{marginTop: 20}} onClick={this.handleAddItem}>Hozzáadás</button>*/}
-                    <button type="button" onClick={this.handleAddIngredient}>Add Ingredient</button>
-                    <button className="margin" style={{backgroundColor: "#70B69F"}} onClick={this.handleSubmit}>Add Product</button>
+                    
+                    <button className="margin" style={{backgroundColor: "#70B69F"}} onClick={this.handleSubmit}>Hozzáadás</button>
                 </div>
             </div>
         </Modal>
