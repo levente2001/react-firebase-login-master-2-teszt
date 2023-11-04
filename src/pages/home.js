@@ -483,7 +483,7 @@ onCloseMmodallll = ()=>{
 componentDidMount() {
   initialize();
   Firebase.auth().onAuthStateChanged((user) => {
-    if (user.email === 'kalolevente@gmail.com') {
+    if (user.email === 'kalolevente@gmail.com' || user.email === 'lalivaroskut@gmail.com') {
       this.setState({ isVisible: true });
     } else {
       this.setState({ isVisible: false });

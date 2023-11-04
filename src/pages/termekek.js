@@ -21,10 +21,13 @@ class Raktarkeszlet extends React.Component {
           selectedQuantitytype: '',
           productName: '',
           ingredients: [{ name: '', quantity: '' }],
+          ingredientss: [{ name: '', quantity: '' }],
           price: '',
-          ingredientOptions: []
+          ingredientOptions: [],
+          ingreDients: [{ name: '', quantity: '' }]
         };
         this.handleAddIngredient = this.handleAddIngredient.bind(this);
+        this.handleAddIngredientt = this.handleAddIngredientt.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -36,12 +39,34 @@ class Raktarkeszlet extends React.Component {
             ingredients: [...prevState.ingredients, { name: '', quantity: '' }]
         }));
     }
+    handleAddIngredientt() {
+        this.setState(prevState => ({
+            ingreDients: [...prevState.ingreDients, { name: '', quantity: '' }]
+        }));
+    }
+    handleMinusIngredient(index) {
+        this.setState(prevState => ({
+            ingreDients: prevState.ingreDients.filter((_, i) => i !== index)
+        }));
+    }
+    handleMinusIngredientt(index) {
+        this.setState(prevState => ({
+            ingredients: prevState.ingredients.filter((_, i) => i !== index)
+        }));
+    }
 
     handleInputChange(index, field, value) {
         const newIngredients = [...this.state.ingredients];
         newIngredients[index][field] = value;
         this.setState({
             ingredients: newIngredients
+        });
+    }
+    handleInputChangee(index, field, value) {
+        const newIngredients = [...this.state.ingreDients];
+        newIngredients[index][field] = value;
+        this.setState({
+            ingreDients: newIngredients
         });
     }
 
@@ -82,7 +107,10 @@ onClickButton = e =>{
 
  onCloseModal = ()=>{
      this.setState({openModal : false})
-     this.setState({selectedItem: ''})
+     this.setState({
+        selectedItem: '',
+        productName: '',
+        price: '',})
    }
 onClickButtonn = e =>{
     e.preventDefault()
@@ -107,8 +135,13 @@ componentDidMount() {
             id: item,
             nev: items[item].nev,
             ar: items[item].ar,
+            ingredients: Object.entries(items[item].ingredients || {}).map(([name, quantity]) => ({
+                name,
+                quantity
+              })),
           });
         }
+        console.log(newState);
         this.setState({
           lista: newState
         });
@@ -130,15 +163,38 @@ componentDidMount() {
 
 
 handleUpdateQuantity = () => {
-    if (this.state.selectedItem  && this.priceInput && this.nevInput) {
-        const newPrice = this.priceInput.value;
-        const newNev = this.nevInput.value;
-        const itemsRef = Firebase.database().ref('sale').child(this.state.selectedItem.id);
-        itemsRef.update({ar: newPrice, nev: newNev });
-        
-        this.setState({ openModal: false, selectedItem: null });
+    if (this.state.selectedItem && this.priceInput && this.nevInput) {
+      // Convert the ingredients array back to the object structure for Firebase
+      const ingredientData = this.state.ingreDients.reduce((acc, ingredient) => {
+        acc[ingredient.name] = ingredient.quantity;
+        return acc;
+      }, {});
+  
+      // Reference to the Firebase path of the selected item
+      const itemRef = Firebase.database().ref('sale').child(this.state.selectedItem.id);
+  
+      // Update Firebase with the new name, price, and ingredients
+      itemRef.update({
+        nev:  this.nevInput.value,
+        ar: this.priceInput.value,
+        ingredients: ingredientData,
+      })
+      .then(() => {
+        // If you want to do something after the update is successful, do it here
+      })
+      .catch(error => {
+        // Handle any errors here
+        console.error('Update failed:', error);
+      });
+  
+      // Reset the modal state
+      this.setState({ openModal: false, selectedItem: null, ingredients: [] });
+    } else {
+      // Handle the case where the state is not set correctly
+      console.error('Missing state information for update');
     }
-}
+  }
+  
 
 handleAddItem = () => {
     const itemsRef = Firebase.database().ref('products');
@@ -170,7 +226,18 @@ getQuantityStyle = (quantity) => {
         return {backgroundColor: '#70B69F'};
     }
   }
+
+  handleEditClick = (item) => {
+    this.setState({
+      selectedItem: item,
+      productName: item.nev,
+      price: item.ar,
+      ingreDients: item.ingredients,
+      openModal: true
+    });
+  }
   
+
   
 
 handleSearchChange = (event) => {
@@ -209,7 +276,7 @@ handleSearchChange = (event) => {
                 <div className="tetelelistaterme" style={{justifyContent: "space-between"}}>
                   <div className="szamlalomasik"   >{item.nev}</div>
                   <div className="cucclihozzmasik" >{item.ar} Ft</div>
-                  <div className="szamlalok" onClick={() => {this.setState({openModal: true}); this.setState({selectedItem: item})}}>edit</div>
+                  <div className="szamlalok" onClick={() => {this.setState({openModal: true}); this.setState({selectedItem: item}); this.handleEditClick(item)}}>edit</div>
                 </div>
               </li>
             )
@@ -241,9 +308,37 @@ handleSearchChange = (event) => {
                                 ref={(input) => this.nevInput = input} 
                             />
                         </div>
+                        <label style={{marginTop: 25, marginBottom: 5, fontWeight: "bold"}} htmlFor="priceInput">Hozzávalók módosítása:</label>
+                        {this.state.ingreDients.map((ingredient, index) => (
+                            <div style={{width: "100%"}} key={index}>
+                            <select
+                                className="input width60p"
+                                style={{margin: 5}}
+                                value={ingredient.name}
+                                onChange={(e) => this.handleInputChangee(index, 'name', e.target.value)}
+                            >
+                                <option value="" disabled>Hozzávaló</option>
+                                {this.state.ingredientOptions.map((ingredientName, idx) => (
+                                    <option key={idx} value={ingredientName}>
+                                        {ingredientName}
+                                    </option>
+                                ))}
+                            </select>
+                            <input
+                                className="input"
+                                style={{margin: 5}}
+                                type="number"
+                                placeholder="Mennyiség"
+                                value={ingredient.quantity}
+                                onChange={(e) => this.handleInputChangee(index, 'quantity', e.target.value)}
+                            />
+                            <button onClick={() => this.handleMinusIngredient(index)}>Eltávolítás</button>
+                            </div>
+                        ))}
+                        <div style={{width: "100%"}}>
+                            <button type="button" onClick={this.handleAddIngredientt}>+ hozzávaló</button>
+                        </div>
                     </div>
-
-                    
                     <button className="margin" style={{backgroundColor: '#70B69F'}} onClick={this.handleUpdateQuantity}>Frissítés</button>
                     <button className="margin" style={{ backgroundColor: '#DC5E5E' }} onClick={() => this.handleDeleteItem(this.state.selectedItem.id)}>Törlés</button>
                 </div>
@@ -314,6 +409,7 @@ handleSearchChange = (event) => {
                                 value={ingredient.quantity}
                                 onChange={(e) => this.handleInputChange(index, 'quantity', e.target.value)}
                             />
+                            <button onClick={() => this.handleMinusIngredientt(index)}>Eltávolítás</button>
                         </div>
                     ))}
                     <div style={{width: "100%"}}>
