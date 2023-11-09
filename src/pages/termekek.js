@@ -77,7 +77,8 @@ class Raktarkeszlet extends React.Component {
             return acc;
         }, {});
 
-        const productRef = Firebase.database().ref(`sale/${this.state.productName}`);
+        const productRef = Firebase.database().ref('sale').push();
+
         productRef.set({
             nev: this.state.productName,
             ingredients: ingredientData,
