@@ -34,7 +34,7 @@ class Admin extends React.Component {
             <div className="termhozzaadas egy">Raktárkészlet</div>
           </Link>
           <div className="ketto">Zárás</div>
-          <div onClick={this.handleZaras} className="harom">Nyitás</div>
+          <div className="harom">Nyitás</div>
         </div>
         
         <Link to="/">Vissza</Link>

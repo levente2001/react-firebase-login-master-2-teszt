@@ -184,6 +184,7 @@ ul.cucclisttermekek::-webkit-scrollbar {
 .img {
   width: 20%;
   height: auto;
+  border-radius: 100px;
 }
 
 .fizetendo {
@@ -427,6 +428,17 @@ button {
 }
 .buttonr {
   background-color: #FF6F61;
+  color: #fff;
+  border-radius: 10px;
+  font-weight: bold;
+  width: 8rem;
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.buttonfl {
+  background-color: #70B69F;
   color: #fff;
   border-radius: 10px;
   font-weight: bold;

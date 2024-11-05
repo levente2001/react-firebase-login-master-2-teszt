@@ -6,17 +6,15 @@ if (!process.env.REACT_APP_FIREBASE_CONFIG) {
   console.log("ENV: ", process.env);
 }
 const firebaseConfig = {
-  apiKey: "AIzaSyB2G3m3pWrq0SBGhOm3opl0d7Ildtj22QQ",
-  authDomain: "csakvar-e2db9.firebaseapp.com",
-  databaseURL: "https://csakvar-e2db9-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "csakvar-e2db9",
-  storageBucket: "csakvar-e2db9.appspot.com",
-  messagingSenderId: "839616465411",
-  appId: "1:839616465411:web:38243d1649fc785bdbdc36",
-  measurementId: "G-3KXJKBHTYN"
+  apiKey: "AIzaSyBPMbpoXJaWgPyCjjlqF_SNzWZomU-3glE",
+  authDomain: "csakvar-teszt.firebaseapp.com",
+  databaseURL: "https://csakvar-teszt-default-rtdb.firebaseio.com",
+  projectId: "csakvar-teszt",
+  storageBucket: "csakvar-teszt.appspot.com",
+  messagingSenderId: "1054237640350",
+  appId: "1:1054237640350:web:add2ecd0e68b316d685d8f",
+  measurementId: "G-XECXZ9SRHN"
 };
-
-
 
 
 export function initialize() {

@@ -179,12 +179,13 @@ handleSearchChange = (event) => {
 
         <ul className="cucclisttermekek">
           {filteredList.map((item) => {
+            const roundedValue = Math.round(item.quantity * 100) / 100;
            return (
               <li  key={item.id}>
                 <div className="tetelelistaterme" style={this.getQuantityStyle(item.quantity)}>
                   <div className="szamlalomasik" style={this.getQuantityStyle(item.quantity)}>{item.nev}</div>
                   <div className="cucclihozzmasik" style={this.getQuantityStyle(item.quantity)}> </div>
-                  <div className="cucclihozzmasik" style={this.getQuantityStyle(item.quantity)}>{item.quantity} {item.type}</div>
+                  <div className="cucclihozzmasik" style={this.getQuantityStyle(item.quantity)}>{roundedValue} {item.type}</div>
                   <div className="szamlalok" onClick={() => {this.setState({openModal: true}); this.setState({selectedItem: item})}}>edit</div>
                 </div>
               </li>

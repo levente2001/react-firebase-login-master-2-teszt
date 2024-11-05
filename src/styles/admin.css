@@ -86,6 +86,7 @@ button:hover {
   font-weight: bold;
   color: #fff;
   padding: 2rem;
+  opacity: 0.4;
 
 }
 .harom {
@@ -100,10 +101,11 @@ button:hover {
   font-weight: bold;
   color: #fff;
   padding: 2rem;
+  opacity: 0.4;
 
 }
 
-:is(.termhozzaadas, .egy, .ketto, .harom):hover {
+:is(.termhozzaadas, .egy):hover {
   cursor: pointer;
   opacity: 0.8;
   padding: 2rem;

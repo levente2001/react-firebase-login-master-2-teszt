@@ -7,7 +7,7 @@ import { authStates, withAuth } from "../components/auth";
 import Firebase from "firebase";
 import { signOut, initialize } from "../utils/firebase";
 import Loader from "../components/loader";
-import logo from '../varoskutlogo.png';
+import logo from '../mylogo.png';
 import emailjs from '@emailjs/browser';
 
 function handleSignOut() {
@@ -589,11 +589,11 @@ componentDidMount() {
             <div className="inner">
               <button className="buttonr" onClick={handleSignOut}> Kijelentkezés </button>
               {/*<button className="button" onClick={this.handleZaras}> ZÁRÁS </button>*/}
-              <button style={{textDecoration: "none", backgroundColor: "#70B69F", padding: 8, borderRadius: 10, color: "white", fontWeight: "bold", width: 100, margin: 10}}  onClick={this.toggleFullScreen.bind(this)}>Teljes</button>
+              <button className="buttonfl" onClick={this.toggleFullScreen.bind(this)}>Fullscreen</button>
             </div>
             {this.state.isVisible && (
               <div className="inner" style={{ width: "100%", marginTop: 10 }}>
-                <Link style={{ textDecoration: "none", backgroundColor: "#70B69F", padding: 8, borderRadius: 10, color: "white", fontWeight: "bold" }} to="/admin">Admin</Link>
+                <Link style={{ textDecoration: "none", backgroundColor: "#F3BB61", padding: 8, borderRadius: 10, color: "white", fontWeight: "bold" }} to="/admin">Admin</Link>
               </div>
             )}
           </div>
