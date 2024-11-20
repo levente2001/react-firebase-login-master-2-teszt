@@ -162,7 +162,7 @@ handleSearchChange = (event) => {
 
         <div style={{display: "flex", alignItems: "center", justifyContent: "space-between", width: "60vw"}}>
             <Link style={{textDecoration: "none", color: "grey", fontWeight: "bold"}} to="/admin">Vissza</Link>
-            <button className="buttonr" style={{backgroundColor: '#70B69F'}} onClick={this.onClickButtonn}>+</button>
+            <button className="buttonr" style={{backgroundColor: '#70B69F', width: "150px"}} onClick={this.onClickButtonn}>+</button>
             <input
                 type="text"
                 placeholder="Keresés..."

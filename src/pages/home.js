@@ -7,7 +7,7 @@ import { authStates, withAuth } from "../components/auth";
 import Firebase from "firebase";
 import { signOut, initialize } from "../utils/firebase";
 import Loader from "../components/loader";
-import logo from '../mylogo.png';
+//import logo from '../mylogo.png';
 import emailjs from '@emailjs/browser';
 
 function handleSignOut() {
@@ -45,8 +45,10 @@ class Home extends React.Component {
       zero: 0,
       bevtl: [],
       user: '',
+      dolgozo: '',
       szamlalo: null,
       isVisible: false,
+      currentDate: new Date()
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -483,6 +485,9 @@ onCloseMmodallll = ()=>{
 componentDidMount() {
   initialize();
   Firebase.auth().onAuthStateChanged((user) => {
+    this.setState({
+      dolgozo: user.email
+    });
     if (user.email === 'kalolevente@gmail.com' || user.email === 'lalivaroskut@gmail.com') {
       this.setState({ isVisible: true });
     } else {
@@ -553,6 +558,15 @@ componentDidMount() {
       });
     }
   });
+
+  this.timer = setInterval(() => {
+    this.setState({ currentDate: new Date() });
+  }, 1000);
+}
+
+componentWillUnmount() {
+  // Időzítő törlése, amikor a komponens eltávolításra kerül
+  clearInterval(this.timer);
 }
 
 
@@ -568,145 +582,145 @@ componentDidMount() {
     let result = numbers.filter(item => item.vendeg === this.state.cimnev).reduce((total, currentValue) => total = total + currentValue.ar * currentValue.szamlalo,0);           
     let bevtl = this.state.bevtl;
     let resultt = bevtl.reduce((total, currentValue) => total + currentValue.ossz,0);
+
+    const { currentDate } = this.state;
   
     return (
       <div className="container">
-        
-        
-        <div className="helo">
-
-          <div className="feherablak3">
-            <p>{resultt} Ft</p>
-
-          </div>
-
-          <div className="feherablak2">
-          <img src={logo}  alt="logo" className="img"></img>
-          </div>
-
-          <div className="feherablak">
-            <h2>{this.state.user}</h2>
-            <div className="inner">
-              <button className="buttonr" onClick={handleSignOut}> Kijelentkezés </button>
+        <div className="grid">
+          <div className="innergrid">
+            <div className="grid-item lt-radius innergrid-full-button">
               {/*<button className="button" onClick={this.handleZaras}> ZÁRÁS </button>*/}
-              <button className="buttonfl" onClick={this.toggleFullScreen.bind(this)}>Fullscreen</button>
+              <button style={{width: "100%", fontSize: "15px", backgroundColor: "#70B69F"}} onClick={this.toggleFullScreen.bind(this)}>Fullscreen</button>
             </div>
+            <div className="grid-item innergrid-admin-button">
             {this.state.isVisible && (
-              <div className="inner" style={{ width: "100%", marginTop: 10 }}>
-                <Link style={{ textDecoration: "none", backgroundColor: "#F3BB61", padding: 8, borderRadius: 10, color: "white", fontWeight: "bold" }} to="/admin">Admin</Link>
+              <div className="inner" style={{ width: "100%"}}>
+                <Link style={{ textDecoration: "none", backgroundColor: "#F3BB61", color: "white", fontWeight: "bold", padding: "0.7rem"}} to="/admin">Admin</Link>
               </div>
             )}
+            </div>
+            <div className="grid-item">
+              <h2>{this.state.dolgozo}</h2>
+            </div>
+            <div className="grid-item">
+              <h2>{currentDate.toLocaleDateString()}</h2>
+            </div>
+            <div className="grid-item">
+              <h2>{currentDate.toLocaleTimeString()}</h2>
+            </div>
+            <div className="grid-item rt-radius innergrid-kijel-button">
+            <button style={{ width: "100%", fontSize: "1rem"}} onClick={handleSignOut}> Kijelentkezés </button>
+            </div>
           </div>
 
-          
-        </div>
+          <div className="innergrid-secondrow">
+            <div className="grid-item">
+              <p>{resultt} Ft</p>
+            </div>
+            <div className="grid-item">
+              <h2 style={{fontSize: "3rem"}}>{this.state.cimnev}</h2>
+            </div>
 
-        <div className="feherablak4">
-          <div className="feherablak5">
-
-            <h2>Vendéglista</h2>
-
-            <form onSubmit={this.handleSubmit}>
-              <label>
-                <input type="text" value={this.state.value} placeholder="Vendég neve" onChange={this.handleChange} />
-              </label>
-              <input className="ipuntplus" type="submit" value="+" />
-            </form>
             
 
-            <ul className="nevek">
-              {this.state.items.map((item) => {
-                return (
-                  <li className="nevekli" onClick={() => {this.setState({cimnev: item.user}); this.setState({ter: result}); this.setState({id: item.id})}} key={item.id}>
-                    {item.user}
-                  </li>
-                )
-              })}
-            </ul>
-
-          </div>
-
-          
-          <div className="feherablak6">
-            <div className="profil">
-              <div className="nev">
-                <h2>{this.state.cimnev}</h2>
-                
-              </div>
-              <div className="plus">
+            <div className="grid-item innergrid-plus-button">
                 <button onClick={this.onClickButton} className="buttonprof"> + </button>
-                <Modal open={this.state.openModal} onClose={this.onCloseModal}>
-                 <div className="modd">
-                 <div className="szuro">
-                   <button className="modalhozz" onClick={() => {this.setState({modcat: "meleg"})}}>Meleg italok</button>
-                   <button className="modalhozz" onClick={() => {this.setState({modcat: "üdítők"})}}>Üdítők</button>
-                   <button className="modalhozz" onClick={() => {this.setState({modcat: "borok"})}}>Borok</button>
-                   <button className="modalhozz" onClick={() => {this.setState({modcat: "koktel"})}}>Koktélok</button>
-                   <button className="modalhozz" onClick={() => {this.setState({modcat: "rovid2"})}}>Rövid 2cl</button>
-                   <button className="modalhozz" onClick={() => {this.setState({modcat: "rovid4"})}}>Rövid 4cl</button>
-                   <button className="modalhozz" onClick={() => {this.setState({modcat: "sör"})}}>Sör</button>
-                   <button className="modalhozz" onClick={() => {this.setState({modcat: "snack"})}}>Snackek</button>
-                   <button className="modalhozz" onClick={() => {this.setState({modcat: "jeges italok"})}}>Jeges italok </button>
-                 </div>
+                  <Modal open={this.state.openModal} onClose={this.onCloseModal}>
+                    <div className="modd">
+                    <div className="szuro">
+                      <button className="modalhozz" onClick={() => {this.setState({modcat: "meleg"})}}>Meleg italok</button>
+                      <button className="modalhozz" onClick={() => {this.setState({modcat: "üdítők"})}}>Üdítők</button>
+                      <button className="modalhozz" onClick={() => {this.setState({modcat: "borok"})}}>Borok</button>
+                      <button className="modalhozz" onClick={() => {this.setState({modcat: "koktel"})}}>Koktélok</button>
+                      <button className="modalhozz" onClick={() => {this.setState({modcat: "rovid2"})}}>Rövid 2cl</button>
+                      <button className="modalhozz" onClick={() => {this.setState({modcat: "rovid4"})}}>Rövid 4cl</button>
+                      <button className="modalhozz" onClick={() => {this.setState({modcat: "sör"})}}>Sör</button>
+                      <button className="modalhozz" onClick={() => {this.setState({modcat: "snack"})}}>Snackek</button>
+                      <button className="modalhozz" onClick={() => {this.setState({modcat: "jeges italok"})}}>Jeges italok </button>
+                    </div>
 
-                 <ul className="termlist">
-                   {this.state.termekek.filter(item => item.cat === this.state.modcat).map((item) => {
-                     return (
-                       <li className="nevekli" onClick={() => {this.setState({szamlalo: 1});this.setState({ar: item.ar}); this.setState({tetel: item.nev})}} key={item.id}>
-                         <h4>{item.nev}</h4>
-                         <h3>{item.ar} Ft</h3>
-                         
-                       {/*enis.can.write=prg'name'*/}
-                       </li>
-                     )
-                   })}
-                 </ul>
+                    <ul className="termlist">
+                      {this.state.termekek.filter(item => item.cat === this.state.modcat).map((item) => {
+                        return (
+                          <li className="nevekli" onClick={() => {this.setState({szamlalo: 1});this.setState({ar: item.ar}); this.setState({tetel: item.nev})}} key={item.id}>
+                            <h4>{item.nev}</h4>
+                            <h3>{item.ar} Ft</h3>
+                            
+                          {/*enis.can.write=prg'name'*/}
+                          </li>
+                        )
+                      })}
+                    </ul>
 
-                 </div>
+                    </div>
 
-                 
-                <button className="modalhozz" onClick={this.handleSubmitTerm}>Hozzáad</button>
+                    
+                  <button className="modalhozz" onClick={this.handleSubmitTerm}>Hozzáad</button>
                 </Modal>
-              </div>
-              <div className="fizetes">
-              <Modal open={this.state.openModalllll} onClose={this.onCloseMmodallll}>
-                <h6>BIZTOSAN FIZET?</h6>
-                <button className="modalhozz" onClick={this.handleSubmitFiz}>FIZET</button>
-                <button className="buttonr" onClick={this.onCloseMmodallll}>MÉGSE</button>
+            </div>
+            <div className="grid-item innergrid-fiz-button">
+                <Modal open={this.state.openModalllll} onClose={this.onCloseMmodallll}>
+                  <h6>BIZTOSAN FIZET?</h6>
+                  <button className="modalhozz" onClick={this.handleSubmitFiz}>FIZET</button>
+                  <button className="buttonr" onClick={this.onCloseMmodallll}>MÉGSE</button>
                 </Modal>
                 <button className="buttonfiz" onClick={this.onClickBbuttonnnn}> Fizetés </button>
-              </div>
-
             </div>
-
-            <div className="fizetendo">
-            
-              Fizetendő: {result} Ft
-            </div>
-
-            <ul className="cucclist">
-                          {this.state.lista.filter(item => item.vendeg === this.state.cimnev).map((item) => {
-                           let szamlalo = item.szamlalo;
-                           //const itemsRefs = Firebase.database().ref('tetelek/' + item.id);
-                           return (
-                              <li  key={item.id}>
-                                <div className="tetelelista">
-                                  <div className="szamlalo">{item.ar * szamlalo} Ft</div>
-                                  <div className="szamlalo">{szamlalo} db</div>
-                                  <div className="cucclihozz">{item.tetel}</div>
-                                  <div className="szamlalop" onClick={() => this.incrementSzamlalo(item.id)}>+</div>
-                                  <div className="szamlalom" onClick={() => this.decrementSzamlalo(item.id)}>-</div>
-                                  <div className="szamlalok" onClick={() => {this.setState({openModalll: true}); this.setState({idt: item.id})}}>törlés</div>
-                                </div>
-                              </li>
-                            )
-                          })}
-                        </ul>
-                        <Modal open={this.state.openModalll} onClose={this.onCloseModalll}>
-                                    <h6>BIZTOSAN TÖRÖLNI AKAROD EZT A TÉTELT?</h6>
-                                    <button className="modalhozz" onClick={this.handleSubmitTetelTorles}>TÖRLÉS</button>
-                        </Modal>
           </div>
+
+          <div className="innergrid-3rdrow">
+            <div className="grid-item">
+              <h2>Vendéglista</h2>
+            </div>
+            <div className="grid-item-left">
+              <h2 className="fizetendo-left-align">Fizetendő: {result} Ft</h2>
+            </div>
+          </div>
+
+          <div className="innergrid-4throw">
+            <div className="grid-item gridlist-padding lb-radius">
+              <form onSubmit={this.handleSubmit}>
+                <label>
+                  <input type="text" value={this.state.value} placeholder="Vendég neve" onChange={this.handleChange} />
+                </label>
+                <input className="ipuntplus" type="submit" value="+" />
+              </form>
+              <ul className="gridlist">
+                {this.state.items.map((item) => {
+                  return (
+                    <li className="nevekli" onClick={() => {this.setState({cimnev: item.user}); this.setState({ter: result}); this.setState({id: item.id})}} key={item.id}>
+                      {item.user}
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+            <div className="grid-item rb-radius">
+              <ul className="cucclist">
+                {this.state.lista.filter(item => item.vendeg === this.state.cimnev).map((item) => {
+                  let szamlalo = item.szamlalo;
+                  //const itemsRefs = Firebase.database().ref('tetelek/' + item.id);
+                  return (
+                  <li  key={item.id}>
+                    <div className="tetelelista">
+                    <div className="szamlalo">{item.ar * szamlalo} Ft</div>
+                    <div className="szamlalo">{szamlalo} db</div>
+                    <div className="cucclihozz">{item.tetel}</div>
+                    <div className="szamlalop" onClick={() => this.incrementSzamlalo(item.id)}>+</div>
+                    <div className="szamlalom" onClick={() => this.decrementSzamlalo(item.id)}>-</div>
+                    <div className="szamlalok" onClick={() => {this.setState({openModalll: true}); this.setState({idt: item.id})}}>törlés</div>
+                    </div>
+                  </li>
+                  )
+                })}
+              </ul>
+              <Modal open={this.state.openModalll} onClose={this.onCloseModalll}>
+                  <h6>BIZTOSAN TÖRÖLNI AKAROD EZT A TÉTELT?</h6>
+                  <button className="modalhozz" onClick={this.handleSubmitTetelTorles}>TÖRLÉS</button>
+              </Modal>
+            </div>
+          </div>  
         </div>
       </div>
     );
