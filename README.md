@@ -1,6 +1,6 @@
 # Deployed App
 
-Try out the app [here](https://varoskutivo.netlify.app/)
+Try out the app [here](https://demonexatally.netlify.app/)
 
 Vendéglátói webes POS rendszer
 
